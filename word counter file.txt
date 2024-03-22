@@ -1,0 +1,31 @@
+def word_counter(text):
+    """
+    Count the number of words in the input text.
+
+    Args:
+    text (str): The input text.
+
+    Returns:
+    int: The number of words in the text.
+    """
+    words = text.split()
+    return len(words)
+
+def main():
+    """
+    Main function to handle user input and display output.
+    """
+    print("Welcome to the Word Counter!")
+    while True:
+        text = input("Enter a sentence or paragraph (or type 'exit' to quit): ")
+        if text.lower() == 'exit':
+            print("Thank you for using the Word Counter. Goodbye!")
+            break
+        elif not text.strip():  # Check for empty input
+            print("Please enter some text.")
+        else:
+            count = word_counter(text)
+            print(f"Word count: {count}")
+
+if __name__ == "__main__":
+    main()
