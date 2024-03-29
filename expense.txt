@@ -1,0 +1,65 @@
+import json
+from collections import defaultdict
+
+def load_expenses():
+    try:
+        with open('expenses.json', 'r') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return defaultdict(list)
+
+def save_expenses(expenses):
+    with open('expenses.json', 'w') as f:
+        json.dump(expenses, f, indent=4)
+
+def add_expense(expenses):
+    date = input("Enter the date of the expense (YYYY-MM-DD): ")
+    amount = float(input("Enter the amount spent: "))
+    category = input("Enter the category of the expense: ")
+    description = input("Enter a brief description: ")
+
+    expenses[date].append({
+        'amount': amount,
+        'category': category,
+        'description': description
+    })
+    print("Expense added successfully!")
+
+def view_summary(expenses):
+    month = input("Enter the month you want to view (YYYY-MM): ")
+    total = sum(exp['amount'] for exps in expenses.values() for exp in exps if exp['date'].startswith(month))
+    print(f"Total expenses for {month}: ${total:.2f}")
+
+    category_totals = defaultdict(float)
+    for exps in expenses.values():
+        for exp in exps:
+            if exp['date'].startswith(month):
+                category_totals[exp['category']] += exp['amount']
+    
+    print("\nCategory-wise expenditure:")
+    for category, total in category_totals.items():
+        print(f"{category}: ${total:.2f}")
+
+def main():
+    expenses = load_expenses()
+
+    while True:
+        print("\nExpense Tracker Menu:")
+        print("1. Add Expense")
+        print("2. View Summary")
+        print("3. Exit")
+
+        choice = input("Enter your choice (1-3): ")
+        if choice == '1':
+            add_expense(expenses)
+        elif choice == '2':
+            view_summary(expenses)
+        elif choice == '3':
+            save_expenses(expenses)
+            print("Exiting Expense Tracker. Goodbye!")
+            break
+        else:
+            print("Invalid choice. Please enter a number between 1 and 3.")
+
+if __name__ == "__main__":
+    main()
